@@ -1,0 +1,8 @@
+@mixin wrapper {
+  border: 1px solid #dee4ec;
+  border-radius: 5px;
+  box-shadow: 1px 1px 16px 0 rgba(0,0,0,.08);
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr 120px;
+} 
