@@ -1,6 +1,6 @@
 <?php
 
-namespace AMR\Plugin;
+namespace AMW\Plugin;
 
 /**
  * Plugins custom settings page that adheres to wp standard
@@ -76,11 +76,18 @@ class Ajax
 
       $data = json_decode(stripslashes($_POST['data']), true);
 
-      update_option('rugbyexplorer_options', $data);
+      if ($data['amw_time']) {
+        $dt = new \DateTime($data['amw_time']);
+        $data['amw_time'] = $dt->format('H:i');
+      }
+
+
+      error_log(print_r($data, true));
+      update_option('amw_options', $data);
 
       wp_send_json(array(
         'status' => 'success',
-        'data' => array(),
+        'data' => $data,
       ));
     } catch (\Exception $e) {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace AMR\Plugin;
+namespace AMW\Plugin;
 
 
 defined('ABSPATH') || exit;
