@@ -33,14 +33,8 @@ class Ajax
     // Save settings via ajax 
     add_action("wp_ajax_save_settings", array($this, 'save_settings'));
 
-    // Delete events via ajax 
-    add_action("wp_ajax_delete_events", array($this, 'delete_events'));
-
-    // Create Team via ajax 
-    add_action("wp_ajax_create_team", array($this, 'create_team'));
-
-    // Delete Team via ajax 
-    add_action("wp_ajax_delete_team", array($this, 'delete_team'));
+    // Generate Summary via ajax 
+    add_action('wp_ajax_spai_generate_summary', array($this, 'ajax_generate_summary'));
   }
 
   /**
@@ -98,12 +92,11 @@ class Ajax
     }
   }
 
+
   /**
-   * Delete events ajax handler
-   * 
-   * @since 1.0
+   * AJAX handler.
    */
-  public function delete_events()
+  public function ajax_generate_summary()
   {
 
     if (!defined('DOING_AJAX') || !DOING_AJAX) {
@@ -164,92 +157,26 @@ class Ajax
         'message' => $e->getMessage()
       ));
     }
+
+    $summary = $this->call_openai($api_key, $prompt);
+
+    if (is_wp_error($summary)) {
+      wp_send_json_error(array('message' => $summary->get_error_message()), 500);
+    }
+
+    $post_id = $this->create_draft_post($event_id, $summary);
+
+    if (is_wp_error($post_id)) {
+      wp_send_json_error(array('message' => $post_id->get_error_message()), 500);
+    }
+
+    $response = array(
+      'message'  => __('Draft created successfully.', 'ai-match-writer'),
+      'postId'   => $post_id,
+      'editLink' => get_edit_post_link($post_id, ''),
+    );
+
+    wp_send_json_success($response);
   }
-
-  /**
-   * Create team ajax handler
-   * 
-   * @since 1.0
-   */
-  public function create_team()
-  {
-
-    if (!defined('DOING_AJAX') || !DOING_AJAX) {
-      wp_die();
-    }
-
-    if (!is_user_logged_in()) {
-      wp_die();
-    }
-
-    try {
-
-      $data = json_decode(stripslashes($_POST['data']), true);
-      $options = get_option('rugbyexplorer_options');
-
-      $options['rugbyexplorer_field_club_teams'][] = $data;
-
-      update_option('rugbyexplorer_options', $options);
-
-      wp_send_json(array(
-        'status' => 'success',
-        'data' => $options,
-      ));
-    } catch (\Exception $e) {
-
-      wp_send_json(array(
-        'status' => 'error',
-        'message' => $e->getMessage()
-      ));
-    }
-  }
-
-  /**
-   * Delete team ajax handler
-   * 
-   * @since 1.0
-   */
-  public function delete_team()
-  {
-
-    if (!defined('DOING_AJAX') || !DOING_AJAX) {
-      wp_die();
-    }
-
-    if (!is_user_logged_in()) {
-      wp_die();
-    }
-
-    try {
-
-      $data = json_decode(stripslashes($_POST['data']), true);
-      $options = get_option('rugbyexplorer_options');
-
-      $foundIndex = false;
-      foreach ($options['rugbyexplorer_field_club_teams'] as $key => $team) {
-        if ($team === $data) {
-          $foundIndex = $key;
-          break;
-        }
-      }
-
-      if ($foundIndex !== false) {
-        unset($options['rugbyexplorer_field_club_teams'][$foundIndex]);
-        // Reindex the array to maintain sequential keys
-        $options['rugbyexplorer_field_club_teams'] = array_values($options['rugbyexplorer_field_club_teams']);
-        update_option('rugbyexplorer_options', $options);
-      }
-
-      wp_send_json(array(
-        'status' => 'success',
-        'data' => $options,
-      ));
-    } catch (\Exception $e) {
-
-      wp_send_json(array(
-        'status' => 'error',
-        'message' => $e->getMessage()
-      ));
-    }
-  }
+ 
 }

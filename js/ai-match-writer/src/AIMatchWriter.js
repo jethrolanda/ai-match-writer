@@ -9,7 +9,8 @@ import {
   Card,
   TimePicker,
   Row,
-  Col
+  Col,
+  Switch
 } from "antd";
 import GeneratePost from "./GeneratePost";
 import dayjs from "dayjs";
@@ -20,6 +21,17 @@ const AIMatchWriter = () => {
   const [teams, setTeams] = useState([]);
   const format = "HH:mm";
   const [api, contextHolder] = notification.useNotification();
+
+  const startYear = 2019;
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: currentYear - startYear + 1 }, (_, i) => {
+    const year = startYear + i;
+    return {
+      value: year,
+      label: year.toString()
+    };
+  });
+
   const openNotificationWithIcon = (type) => {
     api[type]({
       message: "Settings saved!",
@@ -76,7 +88,7 @@ const AIMatchWriter = () => {
             {contextHolder}
             <Card
               size="small"
-              title="Settings"
+              title="Automation Settings"
               style={{ marginBottom: "40px" }}
             >
               <Form.Item
@@ -88,25 +100,33 @@ const AIMatchWriter = () => {
               >
                 <Input.Password />
               </Form.Item>
-              <Form.Item name="amw_frequency" label="Frequency">
-                <Select
-                  placeholder="How frequent"
-                  options={[
-                    { label: "Daily", value: "daily" },
-                    { label: "Turn Off", value: "off" }
-                  ]}
-                />
+
+              <Form.Item name="amw_enable" label="Enable Auto Generation">
+                <Switch defaultChecked />
               </Form.Item>
 
               <Form.Item
-                name="amw_time"
+                name="amw_time_range"
                 label="Time"
-                rules={[{ required: true, message: "Please select a Time!" }]}
+                rules={[{ required: true, message: "Please select a time!" }]}
               >
                 <TimePicker format={format} />
+                <p>
+                  The system will check daily for fixtures and results. Will
+                  auto generate post for fixtures and results during the
+                  selected time. Please select a time where no more teams are
+                  playing so that the system will include the games in the match
+                  writing generation.
+                </p>
               </Form.Item>
 
-              <Form.Item label="Prompt Template" name="amw_prompt_template">
+              <Form.Item
+                label="User Prompt"
+                name="amw_user_prompt"
+                rules={[
+                  { required: true, message: "Please insert user prompt!" }
+                ]}
+              >
                 <Input.TextArea
                   rows={10}
                   maxLength={500}
@@ -116,7 +136,41 @@ const AIMatchWriter = () => {
                   }}
                 />
               </Form.Item>
-              <Form.Item label="Targeted Teams" name="amw_targeted_teams">
+
+              <Form.Item
+                label="System Prompt"
+                name="amw_system_prompt"
+                rules={[
+                  { required: true, message: "Please insert system prompt!" }
+                ]}
+              >
+                <Input.TextArea
+                  rows={10}
+                  maxLength={500}
+                  count={{
+                    show: true,
+                    max: 500
+                  }}
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="amw_season"
+                label="Season"
+                rules={[{ required: true }]}
+              >
+                <Select
+                  defaultValue={currentYear}
+                  style={{ width: 120 }}
+                  options={years}
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Targeted Teams"
+                name="amw_targeted_teams"
+                rules={[{ required: true, message: "Please select teams!" }]}
+              >
                 <Select
                   mode="multiple"
                   style={{ width: "100%" }}
@@ -134,7 +188,7 @@ const AIMatchWriter = () => {
                 }}
               >
                 <Button type="primary" htmlType="submit" loading={loading}>
-                  Submit
+                  Save
                 </Button>
               </Form.Item>
             </Card>

@@ -20,6 +20,7 @@ class AI_Match_Writer
 	public $settings;
 	public $cron;
 	public $api;
+	public $matchwriter;
 
 	const VERSION = '1.0';
 
@@ -42,6 +43,7 @@ class AI_Match_Writer
 		$this->settings = \AMW\Plugin\Settings::instance();
 		$this->api = \AMW\Plugin\Api::instance();
 		$this->cron = \AMW\Plugin\Cron::instance();
+		$this->matchwriter = \AMW\Plugin\MatchWriter::instance();
 
 
 		// Register Activation Hook
