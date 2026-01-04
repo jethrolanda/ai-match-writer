@@ -70,14 +70,14 @@ class Ajax
 
       $data = json_decode(stripslashes($_POST['data']), true);
 
-      if ($data['amw_time']) {
-        $dt = new \DateTime($data['amw_time']);
-        $data['amw_time'] = $dt->format('H:i');
-      }
+      // if ($data['amw_time']) {
+      //   $dt = new \DateTime($data['amw_time']);
+      //   $data['amw_time'] = $dt->format('H:i');
+      // }
 
 
       error_log(print_r($data, true));
-      update_option('amw_options', $data);
+      // update_option('amw_options', $data);
 
       wp_send_json(array(
         'status' => 'success',
@@ -178,5 +178,4 @@ class Ajax
 
     wp_send_json_success($response);
   }
- 
 }

@@ -38,6 +38,12 @@ class MatchWriter
     return self::$_instance;
   }
 
+  /**
+   * Get all upcoming and completed games for a team.
+   * Format the data for OpenAI consumption.
+   * 
+   * @since 1.0
+   */
   public function check_games()
   {
     if (!defined('DOING_AJAX') || !DOING_AJAX) {
@@ -107,6 +113,14 @@ class MatchWriter
 
 
   }
+
+  /**
+   * Query all upcoming and completed games for a team.
+   * Format the data for OpenAI consumption.
+   *  
+   * @return array Array of post ids
+   * @since 1.0
+   */
   public function check_fixtures()
   {
     $tomorrow = date('Y-m-d', strtotime('+1 day'));
@@ -131,6 +145,13 @@ class MatchWriter
     error_log(print_r($query, true));
   }
 
+  /**
+   * Get event scores by post or match id.
+   * 
+   * @param int $id The post or match ID.
+   * @return string
+   * @since 1.0
+   */
   public function get_scores($id)
   {
     $scores = get_post_meta($id, 'sp_results', true);
@@ -141,8 +162,21 @@ class MatchWriter
     return implode('-', $final_scores);
   }
 
+  /**
+   * Get all key performers in the match
+   * Sample return:
+   * Key Performers:
+   * - NSW Samoa: John Doe (2 tries), Mike Lee (5 tackles)
+   * - Fiji Ravouvou: Sam Tui (1 try)  
+   * 
+   * @param int $id The post or match ID.
+   * @return string
+   * @since 1.0
+   */
   public function get_players_key_performers($id)
   {
+
+
     $matches = "";
     $match_details = get_post_meta($id, 'rugby_explorer_match_details_data', true);
     $points = array();
@@ -210,13 +244,24 @@ class MatchWriter
     // error_log(print_r($points, true));
   }
 
+  /**
+   * Get top playes to watch
+   * Sample return:
+   * Players to Watch:
+   * - Queensland Reds: Tom Smith
+   * - Auckland Blues: James Wong
+   * 
+   * @param int $id The post or match ID.
+   * @return string
+   * @since 1.0
+   */
   public function get_players_to_watch($id)
   {
     $teams = get_post_meta($id, 'sp_team');
 
     $matches = "";
     foreach ($teams as $team_id) {
-      $top_scorers = $this->my_get_top_rugby_scorers(0, 0, $team_id, 3);
+      $top_scorers = $this->get_top_rugby_scorers(0, 0, $team_id, 3);
       $team_name = get_the_title($team_id);
       $team_name = html_entity_decode($team_name, ENT_QUOTES, 'UTF-8');
       $matches .= "- {$team_name}: ";
@@ -231,7 +276,18 @@ class MatchWriter
     return $matches;
   }
 
-  public function my_get_top_rugby_scorers($league_id = 0, $season_id = 0, $team_id = 0, $limit = 10)
+  /**
+   * Get top players by team sort by total points scored. Return only top 3 players.
+   * Sample return:
+   * Players to Watch:
+   * - Queensland Reds: Tom Smith
+   * - Auckland Blues: James Wong
+   * 
+   * @param int $id The post or match ID.
+   * @return array
+   * @since 1.0
+   */
+  public function get_top_rugby_scorers($league_id = 0, $season_id = 0, $team_id = 0, $limit = 10)
   {
     // Get all players, filtered by league/season/team
     $args = array(

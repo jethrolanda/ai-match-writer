@@ -4,7 +4,7 @@
  * Plugin Name: Foco Sport - AI Match Writer
  * Version: 1.0
  * Author: FOCO SPORT
- * Description: Automatically generates a short preview for posts using the ChatGPT API.
+ * Description: Automatically generates a short preview for posts using ChatGPT API.
  * Author URI: https://focosme.com/
  * Text Domain: ai-match-writer
  * Domain Path: /languages/
