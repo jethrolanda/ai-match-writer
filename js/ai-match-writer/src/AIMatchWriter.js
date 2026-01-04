@@ -11,7 +11,8 @@ import {
   Row,
   Col,
   Switch,
-  Space
+  Space,
+  Spin
 } from "antd";
 import GeneratePost from "./GeneratePost";
 import dayjs from "dayjs";
@@ -19,6 +20,7 @@ import dayjs from "dayjs";
 const AIMatchWriter = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [isGettingTeams, setIsGettingTeams] = useState(false);
   const [teams, setTeams] = useState([]);
   const format = "HH:mm";
   const [api, contextHolder] = notification.useNotification();
@@ -43,6 +45,30 @@ const AIMatchWriter = () => {
       description: "Settings succesfully saved."
     });
   };
+
+  const getSeasonTeam = async (season) => {
+    setIsGettingTeams(true);
+    const formData = new FormData();
+    formData.append("action", "get_season_teams");
+    formData.append("season", season);
+
+    const response = await fetch(amw_params.ajax_url, {
+      method: "POST",
+      headers: {
+        "X-WP-Nonce": amw_params.nonce
+      },
+      body: formData
+    });
+
+    if (!response.ok) throw new Error("API request failed");
+    const { status, data } = await response.json();
+
+    setIsGettingTeams(false);
+    if (status == "success") {
+      setTeams(data);
+    }
+  };
+
   const onFinish = async (values) => {
     console.log(values);
     // setLoading(true);
@@ -137,11 +163,11 @@ const AIMatchWriter = () => {
                     <TimePicker format={format} style={{ width: 200 }} />
                   </Form.Item>
                   <p>
-                    The system will check daily for fixtures and results. Will
-                    auto generate post for fixtures and results during the
-                    selected time. Please select a time where no more teams are
-                    playing so that the system will include the games in the
-                    match writing generation.
+                    The system will check daily fixtures and results. Will auto
+                    generate post for fixtures and results on the selected time.
+                    Please select a time where no more teams are playing so that
+                    the system can include the games in the match writing
+                    generation.
                   </p>
                 </Space>
               </Form.Item>
@@ -181,12 +207,24 @@ const AIMatchWriter = () => {
                 />
               </Form.Item>
 
-              <Form.Item
-                name="amw_season"
-                label="Season"
-                rules={[{ required: true }]}
-              >
-                <Select style={{ width: 200 }} options={years} />
+              <Form.Item label="Season">
+                <Space align="start">
+                  <Form.Item name="amw_season" rules={[{ required: true }]}>
+                    <Select
+                      style={{ width: 200 }}
+                      options={years}
+                      onChange={getSeasonTeam}
+                    />
+                  </Form.Item>
+                  <p
+                    style={{
+                      marginTop: 2,
+                      display: isGettingTeams ? "block" : "none"
+                    }}
+                  >
+                    <Spin /> Fetching teams for this season.
+                  </p>
+                </Space>
               </Form.Item>
 
               <Form.Item label="Targeted Teams" name="amw_targeted_teams">
@@ -196,6 +234,7 @@ const AIMatchWriter = () => {
                   placeholder="Please select teams"
                   optionFilterProp="label"
                   options={teams}
+                  disabled={isGettingTeams}
                 />
               </Form.Item>
 

@@ -66,7 +66,7 @@ class Scripts
         'nonce' => wp_create_nonce('wp_rest'),
         'ajax_url' => admin_url('admin-ajax.php'),
         'settings' => $settings ? $settings : array(),
-        'teams' => $this->getAllTeams()
+        'teams' => $this->get_all_teams($settings['amw_season'] ?? null),
       ));
       wp_register_style('amw-css', AMW_JS_ROOT_URL . 'ai-match-writer/build/style-index.css');
 
@@ -75,14 +75,16 @@ class Scripts
     }
   }
 
-  public function getAllTeams()
+  public function get_all_teams($season = null)
   {
-    $current_year = date('Y');
+    if ($season === null) {
+      $season = date('Y');
+    }
 
     $season = get_terms(array(
       'taxonomy'   => 'sp_season',
       'hide_empty' => false,
-      'name__like' => $current_year,
+      'name__like' => $season,
       'number'     => 1
     ));
 

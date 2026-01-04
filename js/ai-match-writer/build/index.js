@@ -30048,6 +30048,673 @@ const prepareComponentToken = () => ({});
 
 /***/ }),
 
+/***/ "./node_modules/antd/es/spin/Indicator/Looper.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/antd/es/spin/Indicator/Looper.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Looper)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Progress__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Progress */ "./node_modules/antd/es/spin/Indicator/Progress.js");
+"use client";
+
+
+
+
+function Looper(props) {
+  const {
+    prefixCls,
+    percent = 0
+  } = props;
+  const dotClassName = `${prefixCls}-dot`;
+  const holderClassName = `${dotClassName}-holder`;
+  const hideClassName = `${holderClassName}-hidden`;
+  // ===================== Render =====================
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+    className: classnames__WEBPACK_IMPORTED_MODULE_1___default()(holderClassName, percent > 0 && hideClassName)
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+    className: classnames__WEBPACK_IMPORTED_MODULE_1___default()(dotClassName, `${prefixCls}-dot-spin`)
+  }, [1, 2, 3, 4].map(i => (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+    className: `${prefixCls}-dot-item`,
+    key: i
+  }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Progress__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    prefixCls: prefixCls,
+    percent: percent
+  }));
+}
+
+/***/ }),
+
+/***/ "./node_modules/antd/es/spin/Indicator/Progress.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/antd/es/spin/Indicator/Progress.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var rc_util_es_hooks_useLayoutEffect__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rc-util/es/hooks/useLayoutEffect */ "./node_modules/rc-util/es/hooks/useLayoutEffect.js");
+"use client";
+
+
+
+
+const viewSize = 100;
+const borderWidth = viewSize / 5;
+const radius = viewSize / 2 - borderWidth / 2;
+const circumference = radius * 2 * Math.PI;
+const position = 50;
+const CustomCircle = props => {
+  const {
+    dotClassName,
+    style,
+    hasCircleCls
+  } = props;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("circle", {
+    className: classnames__WEBPACK_IMPORTED_MODULE_1___default()(`${dotClassName}-circle`, {
+      [`${dotClassName}-circle-bg`]: hasCircleCls
+    }),
+    r: radius,
+    cx: position,
+    cy: position,
+    strokeWidth: borderWidth,
+    style: style
+  });
+};
+const Progress = _ref => {
+  let {
+    percent,
+    prefixCls
+  } = _ref;
+  const dotClassName = `${prefixCls}-dot`;
+  const holderClassName = `${dotClassName}-holder`;
+  const hideClassName = `${holderClassName}-hidden`;
+  const [render, setRender] = react__WEBPACK_IMPORTED_MODULE_0__.useState(false);
+  // ==================== Visible =====================
+  (0,rc_util_es_hooks_useLayoutEffect__WEBPACK_IMPORTED_MODULE_2__["default"])(() => {
+    if (percent !== 0) {
+      setRender(true);
+    }
+  }, [percent !== 0]);
+  // ==================== Progress ====================
+  const safePtg = Math.max(Math.min(percent, 100), 0);
+  // ===================== Render =====================
+  if (!render) {
+    return null;
+  }
+  const circleStyle = {
+    strokeDashoffset: `${circumference / 4}`,
+    strokeDasharray: `${circumference * safePtg / 100} ${circumference * (100 - safePtg) / 100}`
+  };
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+    className: classnames__WEBPACK_IMPORTED_MODULE_1___default()(holderClassName, `${dotClassName}-progress`, safePtg <= 0 && hideClassName)
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
+    viewBox: `0 0 ${viewSize} ${viewSize}`,
+    // biome-ignore lint/a11y/noNoninteractiveElementToInteractiveRole: progressbar could be readonly
+    role: "progressbar",
+    "aria-valuemin": 0,
+    "aria-valuemax": 100,
+    "aria-valuenow": safePtg
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(CustomCircle, {
+    dotClassName: dotClassName,
+    hasCircleCls: true
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(CustomCircle, {
+    dotClassName: dotClassName,
+    style: circleStyle
+  })));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Progress);
+
+/***/ }),
+
+/***/ "./node_modules/antd/es/spin/Indicator/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/antd/es/spin/Indicator/index.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Indicator)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _util_reactNode__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../_util/reactNode */ "./node_modules/antd/es/_util/reactNode.js");
+/* harmony import */ var _Looper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Looper */ "./node_modules/antd/es/spin/Indicator/Looper.js");
+"use client";
+
+
+
+
+
+function Indicator(props) {
+  const {
+    prefixCls,
+    indicator,
+    percent
+  } = props;
+  const dotClassName = `${prefixCls}-dot`;
+  if (indicator && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.isValidElement(indicator)) {
+    return (0,_util_reactNode__WEBPACK_IMPORTED_MODULE_2__.cloneElement)(indicator, {
+      className: classnames__WEBPACK_IMPORTED_MODULE_1___default()(indicator.props.className, dotClassName),
+      percent
+    });
+  }
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Looper__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    prefixCls: prefixCls,
+    percent: percent
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/antd/es/spin/index.js":
+/*!********************************************!*\
+  !*** ./node_modules/antd/es/spin/index.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var throttle_debounce__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! throttle-debounce */ "./node_modules/throttle-debounce/esm/index.js");
+/* harmony import */ var _util_warning__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../_util/warning */ "./node_modules/antd/es/_util/warning.js");
+/* harmony import */ var _config_provider_context__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config-provider/context */ "./node_modules/antd/es/config-provider/context.js");
+/* harmony import */ var _Indicator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Indicator */ "./node_modules/antd/es/spin/Indicator/index.js");
+/* harmony import */ var _style_index__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./style/index */ "./node_modules/antd/es/spin/style/index.js");
+/* harmony import */ var _usePercent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./usePercent */ "./node_modules/antd/es/spin/usePercent.js");
+"use client";
+
+var __rest = undefined && undefined.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+
+
+
+
+
+
+
+
+const _SpinSizes = ['small', 'default', 'large'];
+// Render indicator
+let defaultIndicator;
+function shouldDelay(spinning, delay) {
+  return !!spinning && !!delay && !Number.isNaN(Number(delay));
+}
+const Spin = props => {
+  var _a;
+  const {
+      prefixCls: customizePrefixCls,
+      spinning: customSpinning = true,
+      delay = 0,
+      className,
+      rootClassName,
+      size = 'default',
+      tip,
+      wrapperClassName,
+      style,
+      children,
+      fullscreen = false,
+      indicator,
+      percent
+    } = props,
+    restProps = __rest(props, ["prefixCls", "spinning", "delay", "className", "rootClassName", "size", "tip", "wrapperClassName", "style", "children", "fullscreen", "indicator", "percent"]);
+  const {
+    getPrefixCls,
+    direction,
+    className: contextClassName,
+    style: contextStyle,
+    indicator: contextIndicator
+  } = (0,_config_provider_context__WEBPACK_IMPORTED_MODULE_3__.useComponentConfig)('spin');
+  const prefixCls = getPrefixCls('spin', customizePrefixCls);
+  const [wrapCSSVar, hashId, cssVarCls] = (0,_style_index__WEBPACK_IMPORTED_MODULE_4__["default"])(prefixCls);
+  const [spinning, setSpinning] = react__WEBPACK_IMPORTED_MODULE_0__.useState(() => customSpinning && !shouldDelay(customSpinning, delay));
+  const mergedPercent = (0,_usePercent__WEBPACK_IMPORTED_MODULE_5__["default"])(spinning, percent);
+  react__WEBPACK_IMPORTED_MODULE_0__.useEffect(() => {
+    if (customSpinning) {
+      const showSpinning = (0,throttle_debounce__WEBPACK_IMPORTED_MODULE_2__.debounce)(delay, () => {
+        setSpinning(true);
+      });
+      showSpinning();
+      return () => {
+        var _a;
+        (_a = showSpinning === null || showSpinning === void 0 ? void 0 : showSpinning.cancel) === null || _a === void 0 ? void 0 : _a.call(showSpinning);
+      };
+    }
+    setSpinning(false);
+  }, [delay, customSpinning]);
+  const isNestedPattern = react__WEBPACK_IMPORTED_MODULE_0__.useMemo(() => typeof children !== 'undefined' && !fullscreen, [children, fullscreen]);
+  if (true) {
+    const warning = (0,_util_warning__WEBPACK_IMPORTED_MODULE_6__.devUseWarning)('Spin');
+     true ? warning(!tip || isNestedPattern || fullscreen, 'usage', '`tip` only work in nest or fullscreen pattern.') : 0;
+  }
+  const spinClassName = classnames__WEBPACK_IMPORTED_MODULE_1___default()(prefixCls, contextClassName, {
+    [`${prefixCls}-sm`]: size === 'small',
+    [`${prefixCls}-lg`]: size === 'large',
+    [`${prefixCls}-spinning`]: spinning,
+    [`${prefixCls}-show-text`]: !!tip,
+    [`${prefixCls}-rtl`]: direction === 'rtl'
+  }, className, !fullscreen && rootClassName, hashId, cssVarCls);
+  const containerClassName = classnames__WEBPACK_IMPORTED_MODULE_1___default()(`${prefixCls}-container`, {
+    [`${prefixCls}-blur`]: spinning
+  });
+  const mergedIndicator = (_a = indicator !== null && indicator !== void 0 ? indicator : contextIndicator) !== null && _a !== void 0 ? _a : defaultIndicator;
+  const mergedStyle = Object.assign(Object.assign({}, contextStyle), style);
+  const spinElement = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", Object.assign({}, restProps, {
+    style: mergedStyle,
+    className: spinClassName,
+    "aria-live": "polite",
+    "aria-busy": spinning
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Indicator__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    prefixCls: prefixCls,
+    indicator: mergedIndicator,
+    percent: mergedPercent
+  }), tip && (isNestedPattern || fullscreen) ? (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: `${prefixCls}-text`
+  }, tip)) : null);
+  if (isNestedPattern) {
+    return wrapCSSVar(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", Object.assign({}, restProps, {
+      className: classnames__WEBPACK_IMPORTED_MODULE_1___default()(`${prefixCls}-nested-loading`, wrapperClassName, hashId, cssVarCls)
+    }), spinning && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      key: "loading"
+    }, spinElement), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: containerClassName,
+      key: "container"
+    }, children)));
+  }
+  if (fullscreen) {
+    return wrapCSSVar(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: classnames__WEBPACK_IMPORTED_MODULE_1___default()(`${prefixCls}-fullscreen`, {
+        [`${prefixCls}-fullscreen-show`]: spinning
+      }, rootClassName, hashId, cssVarCls)
+    }, spinElement));
+  }
+  return wrapCSSVar(spinElement);
+};
+Spin.setDefaultIndicator = indicator => {
+  defaultIndicator = indicator;
+};
+if (true) {
+  Spin.displayName = 'Spin';
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Spin);
+
+/***/ }),
+
+/***/ "./node_modules/antd/es/spin/style/index.js":
+/*!**************************************************!*\
+  !*** ./node_modules/antd/es/spin/style/index.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   prepareComponentToken: () => (/* binding */ prepareComponentToken)
+/* harmony export */ });
+/* harmony import */ var _ant_design_cssinjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @ant-design/cssinjs */ "./node_modules/@ant-design/cssinjs/es/index.js");
+/* harmony import */ var _style__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../style */ "./node_modules/antd/es/style/index.js");
+/* harmony import */ var _theme_internal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../theme/internal */ "./node_modules/antd/es/theme/util/genStyleUtils.js");
+/* harmony import */ var _theme_internal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../theme/internal */ "./node_modules/@ant-design/cssinjs-utils/es/index.js");
+
+
+
+const antSpinMove = new _ant_design_cssinjs__WEBPACK_IMPORTED_MODULE_0__.Keyframes('antSpinMove', {
+  to: {
+    opacity: 1
+  }
+});
+const antRotate = new _ant_design_cssinjs__WEBPACK_IMPORTED_MODULE_0__.Keyframes('antRotate', {
+  to: {
+    transform: 'rotate(405deg)'
+  }
+});
+const genSpinStyle = token => {
+  const {
+    componentCls,
+    calc
+  } = token;
+  return {
+    [componentCls]: Object.assign(Object.assign({}, (0,_style__WEBPACK_IMPORTED_MODULE_1__.resetComponent)(token)), {
+      position: 'absolute',
+      display: 'none',
+      color: token.colorPrimary,
+      fontSize: 0,
+      textAlign: 'center',
+      verticalAlign: 'middle',
+      opacity: 0,
+      transition: `transform ${token.motionDurationSlow} ${token.motionEaseInOutCirc}`,
+      '&-spinning': {
+        position: 'relative',
+        display: 'inline-block',
+        opacity: 1
+      },
+      [`${componentCls}-text`]: {
+        fontSize: token.fontSize,
+        paddingTop: calc(calc(token.dotSize).sub(token.fontSize)).div(2).add(2).equal()
+      },
+      '&-fullscreen': {
+        position: 'fixed',
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: token.colorBgMask,
+        zIndex: token.zIndexPopupBase,
+        inset: 0,
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        opacity: 0,
+        visibility: 'hidden',
+        transition: `all ${token.motionDurationMid}`,
+        '&-show': {
+          opacity: 1,
+          visibility: 'visible'
+        },
+        [componentCls]: {
+          [`${componentCls}-dot-holder`]: {
+            color: token.colorWhite
+          },
+          [`${componentCls}-text`]: {
+            color: token.colorTextLightSolid
+          }
+        }
+      },
+      '&-nested-loading': {
+        position: 'relative',
+        [`> div > ${componentCls}`]: {
+          position: 'absolute',
+          top: 0,
+          insetInlineStart: 0,
+          zIndex: 4,
+          display: 'block',
+          width: '100%',
+          height: '100%',
+          maxHeight: token.contentHeight,
+          [`${componentCls}-dot`]: {
+            position: 'absolute',
+            top: '50%',
+            insetInlineStart: '50%',
+            margin: calc(token.dotSize).mul(-1).div(2).equal()
+          },
+          [`${componentCls}-text`]: {
+            position: 'absolute',
+            top: '50%',
+            width: '100%',
+            textShadow: `0 1px 2px ${token.colorBgContainer}` // FIXME: shadow
+          },
+          [`&${componentCls}-show-text ${componentCls}-dot`]: {
+            marginTop: calc(token.dotSize).div(2).mul(-1).sub(10).equal()
+          },
+          '&-sm': {
+            [`${componentCls}-dot`]: {
+              margin: calc(token.dotSizeSM).mul(-1).div(2).equal()
+            },
+            [`${componentCls}-text`]: {
+              paddingTop: calc(calc(token.dotSizeSM).sub(token.fontSize)).div(2).add(2).equal()
+            },
+            [`&${componentCls}-show-text ${componentCls}-dot`]: {
+              marginTop: calc(token.dotSizeSM).div(2).mul(-1).sub(10).equal()
+            }
+          },
+          '&-lg': {
+            [`${componentCls}-dot`]: {
+              margin: calc(token.dotSizeLG).mul(-1).div(2).equal()
+            },
+            [`${componentCls}-text`]: {
+              paddingTop: calc(calc(token.dotSizeLG).sub(token.fontSize)).div(2).add(2).equal()
+            },
+            [`&${componentCls}-show-text ${componentCls}-dot`]: {
+              marginTop: calc(token.dotSizeLG).div(2).mul(-1).sub(10).equal()
+            }
+          }
+        },
+        [`${componentCls}-container`]: {
+          position: 'relative',
+          transition: `opacity ${token.motionDurationSlow}`,
+          '&::after': {
+            position: 'absolute',
+            top: 0,
+            insetInlineEnd: 0,
+            bottom: 0,
+            insetInlineStart: 0,
+            zIndex: 10,
+            width: '100%',
+            height: '100%',
+            background: token.colorBgContainer,
+            opacity: 0,
+            transition: `all ${token.motionDurationSlow}`,
+            content: '""',
+            pointerEvents: 'none'
+          }
+        },
+        [`${componentCls}-blur`]: {
+          clear: 'both',
+          opacity: 0.5,
+          userSelect: 'none',
+          pointerEvents: 'none',
+          '&::after': {
+            opacity: 0.4,
+            pointerEvents: 'auto'
+          }
+        }
+      },
+      // tip
+      // ------------------------------
+      '&-tip': {
+        color: token.spinDotDefault
+      },
+      // holder
+      // ------------------------------
+      [`${componentCls}-dot-holder`]: {
+        width: '1em',
+        height: '1em',
+        fontSize: token.dotSize,
+        display: 'inline-block',
+        transition: `transform ${token.motionDurationSlow} ease, opacity ${token.motionDurationSlow} ease`,
+        transformOrigin: '50% 50%',
+        lineHeight: 1,
+        color: token.colorPrimary,
+        '&-hidden': {
+          transform: 'scale(0.3)',
+          opacity: 0
+        }
+      },
+      // progress
+      // ------------------------------
+      [`${componentCls}-dot-progress`]: {
+        position: 'absolute',
+        inset: 0
+      },
+      // dots
+      // ------------------------------
+      [`${componentCls}-dot`]: {
+        position: 'relative',
+        display: 'inline-block',
+        fontSize: token.dotSize,
+        width: '1em',
+        height: '1em',
+        '&-item': {
+          position: 'absolute',
+          display: 'block',
+          width: calc(token.dotSize).sub(calc(token.marginXXS).div(2)).div(2).equal(),
+          height: calc(token.dotSize).sub(calc(token.marginXXS).div(2)).div(2).equal(),
+          background: 'currentColor',
+          borderRadius: '100%',
+          transform: 'scale(0.75)',
+          transformOrigin: '50% 50%',
+          opacity: 0.3,
+          animationName: antSpinMove,
+          animationDuration: '1s',
+          animationIterationCount: 'infinite',
+          animationTimingFunction: 'linear',
+          animationDirection: 'alternate',
+          '&:nth-child(1)': {
+            top: 0,
+            insetInlineStart: 0,
+            animationDelay: '0s'
+          },
+          '&:nth-child(2)': {
+            top: 0,
+            insetInlineEnd: 0,
+            animationDelay: '0.4s'
+          },
+          '&:nth-child(3)': {
+            insetInlineEnd: 0,
+            bottom: 0,
+            animationDelay: '0.8s'
+          },
+          '&:nth-child(4)': {
+            bottom: 0,
+            insetInlineStart: 0,
+            animationDelay: '1.2s'
+          }
+        },
+        '&-spin': {
+          transform: 'rotate(45deg)',
+          animationName: antRotate,
+          animationDuration: '1.2s',
+          animationIterationCount: 'infinite',
+          animationTimingFunction: 'linear'
+        },
+        '&-circle': {
+          strokeLinecap: 'round',
+          transition: ['stroke-dashoffset', 'stroke-dasharray', 'stroke', 'stroke-width', 'opacity'].map(item => `${item} ${token.motionDurationSlow} ease`).join(','),
+          fillOpacity: 0,
+          stroke: 'currentcolor'
+        },
+        '&-circle-bg': {
+          stroke: token.colorFillSecondary
+        }
+      },
+      // small
+      [`&-sm ${componentCls}-dot`]: {
+        '&, &-holder': {
+          fontSize: token.dotSizeSM
+        }
+      },
+      [`&-sm ${componentCls}-dot-holder`]: {
+        i: {
+          width: calc(calc(token.dotSizeSM).sub(calc(token.marginXXS).div(2))).div(2).equal(),
+          height: calc(calc(token.dotSizeSM).sub(calc(token.marginXXS).div(2))).div(2).equal()
+        }
+      },
+      // large
+      [`&-lg ${componentCls}-dot`]: {
+        '&, &-holder': {
+          fontSize: token.dotSizeLG
+        }
+      },
+      [`&-lg ${componentCls}-dot-holder`]: {
+        i: {
+          width: calc(calc(token.dotSizeLG).sub(token.marginXXS)).div(2).equal(),
+          height: calc(calc(token.dotSizeLG).sub(token.marginXXS)).div(2).equal()
+        }
+      },
+      [`&${componentCls}-show-text ${componentCls}-text`]: {
+        display: 'block'
+      }
+    })
+  };
+};
+const prepareComponentToken = token => {
+  const {
+    controlHeightLG,
+    controlHeight
+  } = token;
+  return {
+    contentHeight: 400,
+    dotSize: controlHeightLG / 2,
+    dotSizeSM: controlHeightLG * 0.35,
+    dotSizeLG: controlHeight
+  };
+};
+// ============================== Export ==============================
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,_theme_internal__WEBPACK_IMPORTED_MODULE_2__.genStyleHooks)('Spin', token => {
+  const spinToken = (0,_theme_internal__WEBPACK_IMPORTED_MODULE_3__.mergeToken)(token, {
+    spinDotDefault: token.colorTextDescription
+  });
+  return [genSpinStyle(spinToken)];
+}, prepareComponentToken));
+
+/***/ }),
+
+/***/ "./node_modules/antd/es/spin/usePercent.js":
+/*!*************************************************!*\
+  !*** ./node_modules/antd/es/spin/usePercent.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ usePercent)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const AUTO_INTERVAL = 200;
+const STEP_BUCKETS = [[30, 0.05], [70, 0.03], [96, 0.01]];
+function usePercent(spinning, percent) {
+  const [mockPercent, setMockPercent] = react__WEBPACK_IMPORTED_MODULE_0__.useState(0);
+  const mockIntervalRef = react__WEBPACK_IMPORTED_MODULE_0__.useRef(null);
+  const isAuto = percent === 'auto';
+  react__WEBPACK_IMPORTED_MODULE_0__.useEffect(() => {
+    if (isAuto && spinning) {
+      setMockPercent(0);
+      mockIntervalRef.current = setInterval(() => {
+        setMockPercent(prev => {
+          const restPTG = 100 - prev;
+          for (let i = 0; i < STEP_BUCKETS.length; i += 1) {
+            const [limit, stepPtg] = STEP_BUCKETS[i];
+            if (prev <= limit) {
+              return prev + restPTG * stepPtg;
+            }
+          }
+          return prev;
+        });
+      }, AUTO_INTERVAL);
+    }
+    return () => {
+      clearInterval(mockIntervalRef.current);
+    };
+  }, [isAuto, spinning]);
+  return isAuto ? mockPercent : percent;
+}
+
+/***/ }),
+
 /***/ "./node_modules/antd/es/style/compact-item-vertical.js":
 /*!*************************************************************!*\
   !*** ./node_modules/antd/es/style/compact-item-vertical.js ***!
@@ -65959,6 +66626,184 @@ function filter (array, pattern) {
 
 /***/ }),
 
+/***/ "./node_modules/throttle-debounce/esm/index.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/throttle-debounce/esm/index.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   debounce: () => (/* binding */ debounce),
+/* harmony export */   throttle: () => (/* binding */ throttle)
+/* harmony export */ });
+/* eslint-disable no-undefined,no-param-reassign,no-shadow */
+
+/**
+ * Throttle execution of a function. Especially useful for rate limiting
+ * execution of handlers on events like resize and scroll.
+ *
+ * @param {number} delay -                  A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher)
+ *                                            are most useful.
+ * @param {Function} callback -               A function to be executed after delay milliseconds. The `this` context and all arguments are passed through,
+ *                                            as-is, to `callback` when the throttled-function is executed.
+ * @param {object} [options] -              An object to configure options.
+ * @param {boolean} [options.noTrailing] -   Optional, defaults to false. If noTrailing is true, callback will only execute every `delay` milliseconds
+ *                                            while the throttled-function is being called. If noTrailing is false or unspecified, callback will be executed
+ *                                            one final time after the last throttled-function call. (After the throttled-function has not been called for
+ *                                            `delay` milliseconds, the internal counter is reset).
+ * @param {boolean} [options.noLeading] -   Optional, defaults to false. If noLeading is false, the first throttled-function call will execute callback
+ *                                            immediately. If noLeading is true, the first the callback execution will be skipped. It should be noted that
+ *                                            callback will never executed if both noLeading = true and noTrailing = true.
+ * @param {boolean} [options.debounceMode] - If `debounceMode` is true (at begin), schedule `clear` to execute after `delay` ms. If `debounceMode` is
+ *                                            false (at end), schedule `callback` to execute after `delay` ms.
+ *
+ * @returns {Function} A new, throttled, function.
+ */
+function throttle (delay, callback, options) {
+  var _ref = options || {},
+    _ref$noTrailing = _ref.noTrailing,
+    noTrailing = _ref$noTrailing === void 0 ? false : _ref$noTrailing,
+    _ref$noLeading = _ref.noLeading,
+    noLeading = _ref$noLeading === void 0 ? false : _ref$noLeading,
+    _ref$debounceMode = _ref.debounceMode,
+    debounceMode = _ref$debounceMode === void 0 ? undefined : _ref$debounceMode;
+  /*
+   * After wrapper has stopped being called, this timeout ensures that
+   * `callback` is executed at the proper times in `throttle` and `end`
+   * debounce modes.
+   */
+  var timeoutID;
+  var cancelled = false;
+
+  // Keep track of the last time `callback` was executed.
+  var lastExec = 0;
+
+  // Function to clear existing timeout
+  function clearExistingTimeout() {
+    if (timeoutID) {
+      clearTimeout(timeoutID);
+    }
+  }
+
+  // Function to cancel next exec
+  function cancel(options) {
+    var _ref2 = options || {},
+      _ref2$upcomingOnly = _ref2.upcomingOnly,
+      upcomingOnly = _ref2$upcomingOnly === void 0 ? false : _ref2$upcomingOnly;
+    clearExistingTimeout();
+    cancelled = !upcomingOnly;
+  }
+
+  /*
+   * The `wrapper` function encapsulates all of the throttling / debouncing
+   * functionality and when executed will limit the rate at which `callback`
+   * is executed.
+   */
+  function wrapper() {
+    for (var _len = arguments.length, arguments_ = new Array(_len), _key = 0; _key < _len; _key++) {
+      arguments_[_key] = arguments[_key];
+    }
+    var self = this;
+    var elapsed = Date.now() - lastExec;
+    if (cancelled) {
+      return;
+    }
+
+    // Execute `callback` and update the `lastExec` timestamp.
+    function exec() {
+      lastExec = Date.now();
+      callback.apply(self, arguments_);
+    }
+
+    /*
+     * If `debounceMode` is true (at begin) this is used to clear the flag
+     * to allow future `callback` executions.
+     */
+    function clear() {
+      timeoutID = undefined;
+    }
+    if (!noLeading && debounceMode && !timeoutID) {
+      /*
+       * Since `wrapper` is being called for the first time and
+       * `debounceMode` is true (at begin), execute `callback`
+       * and noLeading != true.
+       */
+      exec();
+    }
+    clearExistingTimeout();
+    if (debounceMode === undefined && elapsed > delay) {
+      if (noLeading) {
+        /*
+         * In throttle mode with noLeading, if `delay` time has
+         * been exceeded, update `lastExec` and schedule `callback`
+         * to execute after `delay` ms.
+         */
+        lastExec = Date.now();
+        if (!noTrailing) {
+          timeoutID = setTimeout(debounceMode ? clear : exec, delay);
+        }
+      } else {
+        /*
+         * In throttle mode without noLeading, if `delay` time has been exceeded, execute
+         * `callback`.
+         */
+        exec();
+      }
+    } else if (noTrailing !== true) {
+      /*
+       * In trailing throttle mode, since `delay` time has not been
+       * exceeded, schedule `callback` to execute `delay` ms after most
+       * recent execution.
+       *
+       * If `debounceMode` is true (at begin), schedule `clear` to execute
+       * after `delay` ms.
+       *
+       * If `debounceMode` is false (at end), schedule `callback` to
+       * execute after `delay` ms.
+       */
+      timeoutID = setTimeout(debounceMode ? clear : exec, debounceMode === undefined ? delay - elapsed : delay);
+    }
+  }
+  wrapper.cancel = cancel;
+
+  // Return the wrapper function.
+  return wrapper;
+}
+
+/* eslint-disable no-undefined */
+
+/**
+ * Debounce execution of a function. Debouncing, unlike throttling,
+ * guarantees that a function is only executed a single time, either at the
+ * very beginning of a series of calls, or at the very end.
+ *
+ * @param {number} delay -               A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
+ * @param {Function} callback -          A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
+ *                                        to `callback` when the debounced-function is executed.
+ * @param {object} [options] -           An object to configure options.
+ * @param {boolean} [options.atBegin] -  Optional, defaults to false. If atBegin is false or unspecified, callback will only be executed `delay` milliseconds
+ *                                        after the last debounced-function call. If atBegin is true, callback will be executed only at the first debounced-function call.
+ *                                        (After the throttled-function has not been called for `delay` milliseconds, the internal counter is reset).
+ *
+ * @returns {Function} A new, debounced function.
+ */
+function debounce (delay, callback, options) {
+  var _ref = options || {},
+    _ref$atBegin = _ref.atBegin,
+    atBegin = _ref$atBegin === void 0 ? false : _ref$atBegin;
+  return throttle(delay, callback, {
+    debounceMode: atBegin !== false
+  });
+}
+
+
+//# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
 /***/ "./src/AIMatchWriter.js":
 /*!******************************!*\
   !*** ./src/AIMatchWriter.js ***!
@@ -65982,7 +66827,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/select/index.js");
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/space/index.js");
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/time-picker/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/button/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/spin/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/button/index.js");
 /* harmony import */ var _GeneratePost__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GeneratePost */ "./src/GeneratePost.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_2__);
@@ -65997,6 +66843,7 @@ __webpack_require__.r(__webpack_exports__);
 const AIMatchWriter = () => {
   const [form] = antd__WEBPACK_IMPORTED_MODULE_4__["default"].useForm();
   const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [isGettingTeams, setIsGettingTeams] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [teams, setTeams] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const format = "HH:mm";
   const [api, contextHolder] = antd__WEBPACK_IMPORTED_MODULE_5__["default"].useNotification();
@@ -66023,6 +66870,28 @@ const AIMatchWriter = () => {
       message: "Settings saved!",
       description: "Settings succesfully saved."
     });
+  };
+  const getSeasonTeam = async season => {
+    setIsGettingTeams(true);
+    const formData = new FormData();
+    formData.append("action", "get_season_teams");
+    formData.append("season", season);
+    const response = await fetch(amw_params.ajax_url, {
+      method: "POST",
+      headers: {
+        "X-WP-Nonce": amw_params.nonce
+      },
+      body: formData
+    });
+    if (!response.ok) throw new Error("API request failed");
+    const {
+      status,
+      data
+    } = await response.json();
+    setIsGettingTeams(false);
+    if (status == "success") {
+      setTeams(data);
+    }
   };
   const onFinish = async values => {
     console.log(values);
@@ -66129,7 +66998,7 @@ const AIMatchWriter = () => {
                     }
                   })
                 }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("p", {
-                  children: "The system will check daily for fixtures and results. Will auto generate post for fixtures and results during the selected time. Please select a time where no more teams are playing so that the system will include the games in the match writing generation."
+                  children: "The system will check daily fixtures and results. Will auto generate post for fixtures and results on the selected time. Please select a time where no more teams are playing so that the system can include the games in the match writing generation."
                 })]
               })
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"].Item, {
@@ -66164,16 +67033,28 @@ const AIMatchWriter = () => {
                 }
               })
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"].Item, {
-              name: "amw_season",
               label: "Season",
-              rules: [{
-                required: true
-              }],
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(antd__WEBPACK_IMPORTED_MODULE_11__["default"], {
-                style: {
-                  width: 200
-                },
-                options: years
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_12__["default"], {
+                align: "start",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"].Item, {
+                  name: "amw_season",
+                  rules: [{
+                    required: true
+                  }],
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(antd__WEBPACK_IMPORTED_MODULE_11__["default"], {
+                    style: {
+                      width: 200
+                    },
+                    options: years,
+                    onChange: getSeasonTeam
+                  })
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("p", {
+                  style: {
+                    marginTop: 2,
+                    display: isGettingTeams ? "block" : "none"
+                  },
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(antd__WEBPACK_IMPORTED_MODULE_14__["default"], {}), " Fetching teams for this season."]
+                })]
               })
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"].Item, {
               label: "Targeted Teams",
@@ -66185,7 +67066,8 @@ const AIMatchWriter = () => {
                 },
                 placeholder: "Please select teams",
                 optionFilterProp: "label",
-                options: teams
+                options: teams,
+                disabled: isGettingTeams
               })
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"].Item, {
               style: {
@@ -66193,7 +67075,7 @@ const AIMatchWriter = () => {
                 justifyContent: "flex-end",
                 display: "flex"
               },
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(antd__WEBPACK_IMPORTED_MODULE_14__["default"], {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(antd__WEBPACK_IMPORTED_MODULE_15__["default"], {
                 type: "primary",
                 htmlType: "submit",
                 loading: loading,

@@ -35,6 +35,9 @@ class Ajax
 
     // Generate Summary via ajax 
     add_action('wp_ajax_spai_generate_summary', array($this, 'ajax_generate_summary'));
+
+    // Get team by season
+    add_action('wp_ajax_get_season_teams', array($this, 'get_season_teams'));
   }
 
   /**
@@ -92,13 +95,8 @@ class Ajax
     }
   }
 
-
-  /**
-   * AJAX handler.
-   */
-  public function ajax_generate_summary()
+  public function get_season_teams()
   {
-
     if (!defined('DOING_AJAX') || !DOING_AJAX) {
       wp_die();
     }
@@ -108,47 +106,20 @@ class Ajax
     }
 
     try {
-      @set_time_limit(0);
+      global $amw;
 
-      $post_type = array('sp_event', 'sp_team', 'sp_player', 'sp_staff', 'sp_official');
-      $batch_size = 100;
+      $data = array();
+      $season = sanitize_text_field($_POST['season']);
 
-      while (true) {
-        $posts = get_posts([
-          'post_type'      => $post_type,
-          'post_status'    => 'any',
-          'numberposts'    => $batch_size,
-          'fields'         => 'ids',
-        ]);
-
-        if (empty($posts)) break;
-
-        foreach ($posts as $post_id) {
-          wp_delete_post($post_id, true); // force delete
-        }
-
-        // optional: short sleep to prevent timeout
-        // sleep(1);
+      if ($season) {
+        $data = $amw->scripts->get_all_teams($season);
       }
-
-      $taxonomies = array('sp_season', 'sp_league', 'sp_venue', 'sp_role', 'sp_duty');
-
-      foreach ($taxonomies as $taxonomy) {
-        $terms = get_terms([
-          'taxonomy'   => $taxonomy,
-          'hide_empty' => false,
-        ]);
-
-        if (!empty($terms) && !is_wp_error($terms)) {
-          foreach ($terms as $term) {
-            wp_delete_term($term->term_id, $taxonomy);
-          }
-        }
-      }
+      error_log(print_r($season, true));
+      error_log(print_r($data, true));
 
       wp_send_json(array(
         'status' => 'success',
-        'data' => array(),
+        'data' => $data,
       ));
     } catch (\Exception $e) {
 
@@ -157,25 +128,5 @@ class Ajax
         'message' => $e->getMessage()
       ));
     }
-
-    $summary = $this->call_openai($api_key, $prompt);
-
-    if (is_wp_error($summary)) {
-      wp_send_json_error(array('message' => $summary->get_error_message()), 500);
-    }
-
-    $post_id = $this->create_draft_post($event_id, $summary);
-
-    if (is_wp_error($post_id)) {
-      wp_send_json_error(array('message' => $post_id->get_error_message()), 500);
-    }
-
-    $response = array(
-      'message'  => __('Draft created successfully.', 'ai-match-writer'),
-      'postId'   => $post_id,
-      'editLink' => get_edit_post_link($post_id, ''),
-    );
-
-    wp_send_json_success($response);
   }
 }
